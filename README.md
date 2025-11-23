@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 💊 MediTracker - Medicine Tracking Application
 
 Modern and beautiful web application for tracking your medicine intake with schedules and reminders.
@@ -268,3 +269,6 @@ Created with ❤️ for PemWeb Class - Semester 3
 ---
 
 **Note**: Make sure MongoDB is running before starting the application!
+=======
+# MediTracker-VibeCoding
+>>>>>>> f5876f3eddbf19525f519f00856b0c7c6851d4e2
