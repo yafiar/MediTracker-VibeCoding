@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 # 💊 MediTracker - Medicine Tracking Application
-
 Modern and beautiful web application for tracking your medicine intake with schedules and reminders.
 
 ## ✨ Features
@@ -121,14 +119,7 @@ cd backend
 npm install
 ```
 
-3. Create `.env` file:
-```env
-MONGODB_URI=mongodb://localhost:27017/meditracker
-JWT_SECRET=your-secret-key-here
-PORT=5000
-```
-
-4. Start the backend server:
+3. Start the backend server:
 ```bash
 npm start
 ```
@@ -254,21 +245,8 @@ The application features:
 - Interactive schedule management with day selection
 - Responsive design for all screen sizes
 
-## 🤝 Contributing
-
-This is a student project for learning MERN stack development.
-
-## 📄 License
-
-This project is created for educational purposes.
-
 ## 👨‍💻 Author
 
-Created with ❤️ for PemWeb Class - Semester 3
+Created by Ahmad Yafi - 066 for PemWeb Class
 
 ---
-
-**Note**: Make sure MongoDB is running before starting the application!
-=======
-# MediTracker-VibeCoding
->>>>>>> f5876f3eddbf19525f519f00856b0c7c6851d4e2
