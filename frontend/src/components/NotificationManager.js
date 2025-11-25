@@ -132,7 +132,7 @@ const NotificationManager = () => {
     // Show text briefly on desktop only
     if (window.innerWidth > 768) {
       setShowText(true);
-      setTimeout(() => setShowText(false), 2000);
+      setTimeout(() => setShowText(true));
     }
   };
 
