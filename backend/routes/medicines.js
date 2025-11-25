@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 const Medicine = require('../models/Medicine');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
@@ -54,6 +56,11 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 // Update medicine
 router.put('/:id', auth, upload.single('image'), async (req, res) => {
   try {
+    const existing = await Medicine.findOne({ _id: req.params.id, userId: req.user._id });
+    if (!existing) {
+      return res.status(404).json({ message: 'Medicine not found' });
+    }
+
     const updates = {
       name: req.body.name,
       dosage: req.body.dosage,
@@ -62,7 +69,23 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
       frequency: req.body.frequency || 1
     };
 
+    const removeImageFlag = req.body.removeImage === 'true' || req.body.removeImage === true;
+
+    if (removeImageFlag && existing.image) {
+      const oldPath = path.join(__dirname, '..', existing.image.replace(/^\//, ''));
+      if (fs.existsSync(oldPath)) {
+        try { fs.unlinkSync(oldPath); } catch (_) {}
+      }
+      updates.image = null;
+    }
+
     if (req.file) {
+      if (existing.image) {
+        const oldPath = path.join(__dirname, '..', existing.image.replace(/^\//, ''));
+        if (fs.existsSync(oldPath)) {
+          try { fs.unlinkSync(oldPath); } catch (_) {}
+        }
+      }
       updates.image = `/uploads/${req.file.filename}`;
     }
 
@@ -71,10 +94,6 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
       updates,
       { new: true }
     );
-
-    if (!medicine) {
-      return res.status(404).json({ message: 'Medicine not found' });
-    }
 
     res.json(medicine);
   } catch (error) {
@@ -92,6 +111,13 @@ router.delete('/:id', auth, async (req, res) => {
 
     if (!medicine) {
       return res.status(404).json({ message: 'Medicine not found' });
+    }
+
+    if (medicine.image) {
+      const imgPath = path.join(__dirname, '..', medicine.image.replace(/^\//, ''));
+      if (fs.existsSync(imgPath)) {
+        try { fs.unlinkSync(imgPath); } catch (_) {}
+      }
     }
 
     res.json({ message: 'Medicine deleted successfully' });

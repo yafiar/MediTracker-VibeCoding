@@ -26,15 +26,18 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-// Hash password sebelum save
 UserSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 10);
+  const pepper = process.env.JWT_SECRET || '';
+  this.password = await bcrypt.hash(pepper + this.password, 10);
   next();
 });
 
-// Method untuk compare password
 UserSchema.methods.comparePassword = async function(password) {
+  const pepper = process.env.JWT_SECRET || '';
+  const pepperedMatch = await bcrypt.compare(pepper + password, this.password);
+  if (pepperedMatch) return true;
+  // Fallback for legacy hashes without pepper (can be removed after migration)
   return await bcrypt.compare(password, this.password);
 };
 
