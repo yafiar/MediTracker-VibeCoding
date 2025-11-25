@@ -15,6 +15,7 @@ const NotificationManager = () => {
     const saved = localStorage.getItem('notificationsEnabled');
     return saved === null ? true : saved === 'true';
   });
+  const [showText, setShowText] = useState(false);
 
   const dayName = new Date().toLocaleDateString('en-US', { weekday: 'long' });
 
@@ -128,21 +129,34 @@ const NotificationManager = () => {
     setEnabled(next);
     localStorage.setItem('notificationsEnabled', String(next));
     addToast(next ? 'Notifications turned on' : 'Notifications turned off', next ? 'success' : 'error');
+    setShowText(true);
+    setTimeout(() => setShowText(false), 2000);
   };
 
   // Hide toggle on public pages
   if (location.pathname === '/login' || location.pathname === '/register') return null;
 
   return (
-    <div className="notifications-toggle" style={{ position: 'fixed', bottom: 18, right: 18, zIndex: 250 }}>
+    <div 
+      className="notifications-toggle" 
+      style={{ position: 'fixed', bottom: 18, right: 18, zIndex: 10 }}
+      onMouseEnter={() => setShowText(true)}
+      onMouseLeave={() => setShowText(false)}
+    >
       <button
         onClick={toggle}
         className="nav-btn"
-        style={{ background: enabled ? '#667eea' : '#f0f0f5', color: enabled ? '#fff' : '#333' }}
+        style={{ 
+          background: enabled ? '#4A90E2' : '#f0f0f5', 
+          color: enabled ? '#fff' : '#333',
+          transition: 'all 0.3s ease',
+          minWidth: showText ? 'auto' : '44px',
+          padding: showText ? '10px 18px' : '10px 12px'
+        }}
         aria-pressed={enabled}
-        title="Toggle local medicine reminders"
+        title={enabled ? 'Notifications On - Click to turn off' : 'Notifications Off - Click to turn on'}
       >
-        {enabled ? '🔔 Notifications On' : '🔕 Notifications Off'}
+        {enabled ? '🔔' : '🔕'}{showText && (enabled ? ' Notifications On' : ' Notifications Off')}
       </button>
     </div>
   );

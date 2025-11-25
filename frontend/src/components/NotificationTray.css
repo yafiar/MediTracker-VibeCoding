@@ -11,4 +11,4 @@
 .med-dosage { background:#eef2ff; padding:2px 8px; border-radius:12px; }
 .notif-time { font-size:11px; color:#666; }
 @keyframes trayIn { from { transform:translateX(40px); opacity:0;} to { transform:translateX(0); opacity:1;} }
-@media (max-width:600px){ .notif-tray{ top:auto; bottom:80px; right:10px; left:10px; max-width:none;} .notif-card{ width:100%; } }
+@media (max-width:600px){ .notif-tray{ top:auto; bottom:20px; right:10px; left:10px; max-width:none; z-index:50; pointer-events:none;} .notif-card{ width:100%; pointer-events:auto; } }
