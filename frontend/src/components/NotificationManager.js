@@ -129,19 +129,24 @@ const NotificationManager = () => {
     setEnabled(next);
     localStorage.setItem('notificationsEnabled', String(next));
     addToast(next ? 'Notifications turned on' : 'Notifications turned off', next ? 'success' : 'error');
-    setShowText(true);
-    setTimeout(() => setShowText(false), 2000);
+    // Show text briefly on desktop only
+    if (window.innerWidth > 768) {
+      setShowText(true);
+      setTimeout(() => setShowText(false), 2000);
+    }
   };
 
   // Hide toggle on public pages
   if (location.pathname === '/login' || location.pathname === '/register') return null;
 
+  const isMobile = window.innerWidth <= 768;
+
   return (
     <div 
       className="notifications-toggle" 
       style={{ position: 'fixed', bottom: 18, right: 18, zIndex: 10 }}
-      onMouseEnter={() => setShowText(true)}
-      onMouseLeave={() => setShowText(false)}
+      onMouseEnter={() => !isMobile && setShowText(true)}
+      onMouseLeave={() => !isMobile && setShowText(false)}
     >
       <button
         onClick={toggle}
@@ -150,13 +155,13 @@ const NotificationManager = () => {
           background: enabled ? '#4A90E2' : '#f0f0f5', 
           color: enabled ? '#fff' : '#333',
           transition: 'all 0.3s ease',
-          minWidth: showText ? 'auto' : '44px',
-          padding: showText ? '10px 18px' : '10px 12px'
+          minWidth: isMobile ? '44px' : (showText ? 'auto' : '44px'),
+          padding: isMobile ? '10px 12px' : (showText ? '10px 18px' : '10px 12px')
         }}
         aria-pressed={enabled}
         title={enabled ? 'Notifications On - Click to turn off' : 'Notifications Off - Click to turn on'}
       >
-        {enabled ? '🔔' : '🔕'}{showText && (enabled ? ' Notifications On' : ' Notifications Off')}
+        {enabled ? '🔔' : '🔕'}{!isMobile && showText && (enabled ? ' Notifications On' : ' Notifications Off')}
       </button>
     </div>
   );
