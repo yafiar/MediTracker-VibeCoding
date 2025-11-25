@@ -1,6 +1,6 @@
 .medicine-form-container {
   min-height: 100vh;
-  background: #f5f7fa;
+  background: #F9F9F9;
   padding: 30px 20px;
 }
 
@@ -79,8 +79,8 @@
 }
 
 .image-upload-box:hover {
-  border-color: #667eea;
-  background: #f8f9ff;
+  border-color: #4A90E2;
+  background: #FFF8E7;
 }
 
 .image-preview {
@@ -137,8 +137,8 @@
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
 .form-group textarea {
@@ -173,13 +173,13 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #4A90E2 0%, #3CBAC8 100%);
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 10px 25px rgba(74, 144, 226, 0.4);
 }
 
 .btn-primary:disabled {

@@ -1,13 +1,13 @@
 .notif-tray { position:fixed; top:80px; right:20px; display:flex; flex-direction:column; gap:14px; z-index:260; max-width:340px; }
 .notif-card { background:#ffffff; border-radius:18px; padding:16px 18px 14px; box-shadow:0 10px 30px -6px rgba(0,0,0,.25); position:relative; overflow:hidden; animation:trayIn .4s ease; border:1px solid #e2e6f0; }
-.notif-card:before { content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(102,126,234,.12), rgba(118,75,162,.12)); pointer-events:none; }
+.notif-card:before { content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(74,144,226,.12), rgba(60,186,200,.12)); pointer-events:none; }
 .notif-close { position:absolute; top:6px; right:10px; background:transparent; border:none; font-size:20px; line-height:1; cursor:pointer; color:#555; font-weight:bold; }
 .notif-close:hover { color:#000; }
 .notif-header { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
 .notif-header h4 { margin:0; font-size:16px; color:#222; }
 .notif-icon { font-size:20px; }
 .notif-body { margin:0 0 8px; font-size:14px; color:#333; line-height:1.4; }
-.notif-meta { display:flex; gap:6px; font-size:12px; font-weight:600; color:#667eea; }
+.notif-meta { display:flex; gap:6px; font-size:12px; font-weight:600; color:#4A90E2; }
 .med-dosage { background:#eef2ff; padding:2px 8px; border-radius:12px; }
 .notif-time { font-size:11px; color:#666; }
 @keyframes trayIn { from { transform:translateX(40px); opacity:0;} to { transform:translateX(0); opacity:1;} }
