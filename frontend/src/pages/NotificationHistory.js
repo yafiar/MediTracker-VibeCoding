@@ -12,7 +12,7 @@ const NotificationHistory = () => {
         <div className="notif-history-header">
           <h1>Notification History</h1>
           {history.length > 0 && (
-            <button className="btn btn-secondary" onClick={clearHistory}>Clear History</button>
+            <button className="clear-history-btn" onClick={clearHistory}>Clear History</button>
           )}
         </div>
         {history.length === 0 ? (

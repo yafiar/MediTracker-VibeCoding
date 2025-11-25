@@ -1,7 +1,10 @@
 .notif-history-page { min-height:100vh; background:#f5f7fa; }
 .notif-history-container { max-width:900px; margin:0 auto; padding:30px 20px; }
-.notif-history-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; flex-wrap:wrap; gap:12px; }
+.notif-history-header { display:flex; justify-content:flex-start; align-items:center; margin-bottom:25px; gap:16px; }
 .notif-history-header h1 { margin:0; font-size:30px; }
+.clear-history-btn { background:#ff4757; color:#fff; border:none; padding:8px 14px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:.25s; flex:none; white-space:nowrap; margin-left:auto; margin-top:6px; }
+.clear-history-btn:hover { background:#ee2e3c; transform:translateY(-2px); }
+.clear-history-btn:active { transform:translateY(0); }
 .notif-history-list { display:flex; flex-direction:column; gap:14px; }
 .history-item { background:#fff; border-radius:16px; padding:18px 20px; box-shadow:0 4px 16px rgba(0,0,0,.12); display:flex; justify-content:space-between; gap:20px; }
 .history-main h4 { margin:0 0 6px; font-size:16px; }
