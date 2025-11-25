@@ -1,5 +1,5 @@
 # 💊 MediTracker - Medicine Tracking Application
-Modern and beautiful web application for tracking your medicine intake with schedules and reminders.
+A web application for tracking your medicine intake with schedules and reminders.
 
 ## ✨ Features
 
@@ -28,15 +28,7 @@ Modern and beautiful web application for tracking your medicine intake with sche
 - Track adherence to schedule
 - Add notes to each intake
 
-### 🎨 Modern UI/UX
-- Responsive design (mobile & desktop)
-- Smooth animations and transitions
-- Gradient backgrounds
-- Card-based layouts
-- Interactive buttons and forms
-
 ## 🛠️ Tech Stack
-
 ### Frontend
 - **React.js** - UI Framework
 - **React Router** - Navigation
@@ -143,8 +135,6 @@ npm install
 npm start
 ```
 
-Frontend will run on `http://localhost:3000`
-
 ## 📱 Pages Overview
 
 ### 1. Login & Register
@@ -171,15 +161,6 @@ Frontend will run on `http://localhost:3000`
 - Mark as taken
 - Delete schedules
 
-## 🎨 Design Features
-
-- **Color Scheme**: Purple gradient (#667eea to #764ba2)
-- **Animations**: Smooth fade-in, slide-down, and bounce effects
-- **Icons**: Emoji-based icons for modern look
-- **Cards**: Elevated cards with hover effects
-- **Buttons**: Gradient buttons with hover states
-- **Forms**: Modern input fields with focus states
-
 ## 🔒 Security Features
 
 - Password hashing with bcrypt
@@ -187,31 +168,6 @@ Frontend will run on `http://localhost:3000`
 - Protected routes
 - Input validation
 - Error handling
-
-## 📦 Dependencies
-
-### Backend
-```json
-{
-  "express": "^4.18.2",
-  "mongoose": "^7.0.0",
-  "bcryptjs": "^2.4.3",
-  "jsonwebtoken": "^9.0.0",
-  "multer": "^1.4.5-lts.1",
-  "cors": "^2.8.5",
-  "dotenv": "^16.0.3"
-}
-```
-
-### Frontend
-```json
-{
-  "react": "^18.2.0",
-  "react-dom": "^18.2.0",
-  "react-router-dom": "^6.10.0",
-  "axios": "^1.3.4"
-}
-```
 
 ## 🌟 Key Features Implemented
 
@@ -237,13 +193,6 @@ Frontend will run on `http://localhost:3000`
 6. **Monitor** - View your medicine list and intake history
 
 ## 📸 Screenshots
-
-The application features:
-- Gradient login/register pages with animated logo
-- Dashboard with medicine cards and intake tabs
-- Beautiful form layouts with image upload
-- Interactive schedule management with day selection
-- Responsive design for all screen sizes
 
 ## 👨‍💻 Author
 
