@@ -40,7 +40,7 @@ export const authAPI = {
 
 // Medicine API
 export const medicineAPI = {
-  getAll: () => api.get('/medicines'),
+  getAll: (params = {}) => api.get('/medicines', { params }),
   getById: (id) => api.get(`/medicines/${id}`),
   create: (formData) => api.post('/medicines', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import SortSelect from '../components/SortSelect';
 import { useNavigate } from 'react-router-dom';
 import { medicineAPI, intakeAPI } from '../services/api';
 import Navbar from '../components/Navbar';
@@ -9,24 +10,39 @@ import './Dashboard.css';
 const Dashboard = () => {
   const navigate = useNavigate();
   const [medicines, setMedicines] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(12);
+  const [total, setTotal] = useState(0);
+  const [pages, setPages] = useState(1);
   const [todayIntakes, setTodayIntakes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('medicines');
   const [searchTerm, setSearchTerm] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [medicineSort, setMedicineSort] = useState('name'); // name | recent
+  const [sortDirection, setSortDirection] = useState('asc'); // asc | desc
+  const [listVersion, setListVersion] = useState(0); // increments to force re-animation
   const { addToast } = useToast();
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page, medicineSort, sortDirection, searchTerm]);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
-      const [medicinesRes, intakesRes] = await Promise.all([
-        medicineAPI.getAll(),
-        intakeAPI.getTodayIntakes(),
-      ]);
-      setMedicines(medicinesRes.data);
+      const sortField = medicineSort === 'name' ? 'name' : 'createdAt';
+      const res = await medicineAPI.getAll({
+        page,
+        limit,
+        search: searchTerm || undefined,
+        sortField,
+        sortDirection
+      });
+      setMedicines(res.data.items);
+      setTotal(res.data.total);
+      setPages(res.data.pages);
+      const intakesRes = await intakeAPI.getTodayIntakes();
       setTodayIntakes(intakesRes.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -58,7 +74,18 @@ const Dashboard = () => {
     }
   };
 
-  const filteredMedicines = medicines.filter(m => m.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  // Server already returns sorted & filtered subset. Keep listVersion for animation.
+  const sortedMedicines = medicines;
+
+  const toggleDirection = () => {
+    setSortDirection(d => d === 'asc' ? 'desc' : 'asc');
+    setPage(1); // reset to first page when direction changes
+  };
+
+  // Bump version whenever sort criteria change to re-mount cards
+  useEffect(() => {
+    setListVersion(v => v + 1);
+  }, [medicineSort, sortDirection, page, searchTerm]);
 
   return (
     <div className="dashboard">
@@ -78,6 +105,29 @@ const Dashboard = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+              <div className="sort-bar">
+                <SortSelect
+                  value={medicineSort}
+                  onChange={setMedicineSort}
+                  options={[
+                    { value: 'name', label: 'Name' },
+                    { value: 'recent', label: 'Added Date' }
+                  ]}
+                  ariaLabel="Select sort field"
+                />
+                <button
+                  type="button"
+                  className={`sort-direction-btn ${sortDirection === 'desc' ? 'desc' : 'asc'}`}
+                  onClick={toggleDirection}
+                  aria-label={sortDirection === 'asc' ? 'Ascending order' : 'Descending order'}
+                  title={sortDirection === 'asc' ? 'Ascending' : 'Descending'}
+                >
+                  {/* Minimal arrow using inline SVG for crisp rendering */}
+                  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" className="arrow-svg">
+                    <path d="M12 5l6 6H13v8h-2v-8H6l6-6z" fill="currentColor" />
+                  </svg>
+                </button>
+              </div>
             <button
               className="btn btn-primary"
               onClick={() => navigate('/medicines/add')}
@@ -92,7 +142,7 @@ const Dashboard = () => {
             className={`tab ${activeTab === 'medicines' ? 'active' : ''}`}
             onClick={() => setActiveTab('medicines')}
           >
-            My Medicines ({filteredMedicines.length}/{medicines.length})
+            My Medicines ({medicines.length}/{total})
           </button>
           <button
             className={`tab ${activeTab === 'today' ? 'active' : ''}`}
@@ -121,7 +171,7 @@ const Dashboard = () => {
                 </div>
               ))
             )}
-            {!loading && filteredMedicines.length === 0 ? (
+            {!loading && medicines.length === 0 ? (
               <div className="empty-state">
                 <div className="empty-icon">📦</div>
                 <h3>No medicines yet</h3>
@@ -134,8 +184,8 @@ const Dashboard = () => {
                 </button>
               </div>
             ) : (
-              !loading && filteredMedicines.map((medicine) => (
-                <div key={medicine._id} className="medicine-card">
+              !loading && sortedMedicines.map((medicine) => (
+                <div key={`${listVersion}-${medicine._id}`} className="medicine-card">
                   <div className="medicine-image">
                     {medicine.image ? (
                       <img
@@ -182,6 +232,22 @@ const Dashboard = () => {
                 </div>
               ))
             )}
+          </div>
+        )}
+
+        {activeTab === 'medicines' && (
+          <div className="pagination-bar">
+            <button
+              className="pg-btn"
+              disabled={page === 1 || loading}
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+            >Prev</button>
+            <div className="pg-info">Page {page} / {pages}</div>
+            <button
+              className="pg-btn"
+              disabled={page === pages || loading}
+              onClick={() => setPage(p => Math.min(pages, p + 1))}
+            >Next</button>
           </div>
         )}
 

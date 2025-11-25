@@ -61,14 +61,15 @@ const NotificationManager = () => {
       const [schedulesRes, todaysIntakesRes, medsRes] = await Promise.all([
         scheduleAPI.getAll(), // returns normalized single time plus underlying times[]
         intakeAPI.getTodayIntakes(),
-        medicineAPI.getAll()
+        medicineAPI.getAll({ limit: 500 }) // fetch a large batch to cover all medicines
       ]);
 
       // For duplicate detection: scheduleId + scheduledTime string
       const takenMap = new Set(
         todaysIntakesRes.data.map(i => `${(i.scheduleId && i.scheduleId._id) || i.scheduleId}-${i.scheduledTime || ''}`)
       );
-      const medicinesMap = Object.fromEntries(medsRes.data.map(m => [m._id, m]));
+      const medsArray = medsRes.data.items ? medsRes.data.items : medsRes.data;
+      const medicinesMap = Object.fromEntries(medsArray.map(m => [m._id, m]));
       const now = new Date();
 
       const todaySchedules = schedulesRes.data.filter(s => {

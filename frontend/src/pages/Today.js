@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { scheduleAPI, intakeAPI, medicineAPI } from '../services/api';
 import Navbar from '../components/Navbar';
 import './Today.css';
@@ -20,9 +20,10 @@ const Today = () => {
       const [allSchedulesRes, todayRes, medsRes] = await Promise.all([
         scheduleAPI.getAll(),
         intakeAPI.getTodayIntakes(),
-        medicineAPI.getAll()
+        medicineAPI.getAll({ limit: 500 })
       ]);
-      const medicinesMap = Object.fromEntries(medsRes.data.map(m => [m._id, m]));
+      const medsArray = medsRes.data.items ? medsRes.data.items : medsRes.data;
+      const medicinesMap = Object.fromEntries(medsArray.map(m => [m._id, m]));
 
       // Filter schedules due today (days empty => daily, or includes today)
       const dueToday = allSchedulesRes.data.filter(s => {
@@ -30,10 +31,11 @@ const Today = () => {
         return s.days.includes(dayName) || s.days.includes(dayName.substring(0,3));
       });
 
-      setSchedules(dueToday.map(s => ({
+      const mapped = dueToday.map(s => ({
         ...s,
         medicine: medicinesMap[s.medicineId?._id || s.medicineId] || s.medicineId?.medicine || null
-      })));
+      }));
+      setSchedules(mapped);
       setTodayIntakes(todayRes.data);
     } catch (err) {
       setError('Failed to load today\'s schedules');
@@ -60,6 +62,14 @@ const Today = () => {
     }
   };
 
+  const sortedSchedules = useMemo(() => {
+    return [...schedules].sort((a,b) => {
+      const ta = a.time ? a.time : '23:59';
+      const tb = b.time ? b.time : '23:59';
+      return ta.localeCompare(tb);
+    });
+  }, [schedules]);
+
   if (loading) return <div className="today-container"><div className="spinner"></div><p>Loading...</p></div>;
 
   return (
@@ -78,7 +88,7 @@ const Today = () => {
         </div>
       ) : (
         <div className="today-list">
-          {schedules.map(s => {
+          {sortedSchedules.map(s => {
             const taken = isTaken(s);
             return (
               <div key={s._id} className={`today-item ${taken ? 'taken' : ''}`}> 

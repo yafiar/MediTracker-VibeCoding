@@ -6,11 +6,30 @@ const Medicine = require('../models/Medicine');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
-// Get all medicines
+// Get medicines (with pagination, search, sorting)
 router.get('/', auth, async (req, res) => {
   try {
-    const medicines = await Medicine.find({ userId: req.user._id }).sort({ createdAt: -1 });
-    res.json(medicines);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, parseInt(req.query.limit) || 12);
+    const search = (req.query.search || '').trim();
+    const sortFieldRaw = req.query.sortField === 'name' ? 'name' : 'createdAt';
+    const sortDirectionRaw = req.query.sortDirection === 'asc' ? 1 : -1;
+
+    const filter = { userId: req.user._id };
+    if (search) {
+      filter.name = { $regex: search, $options: 'i' };
+    }
+
+    const total = await Medicine.countDocuments(filter);
+    const pages = Math.max(1, Math.ceil(total / limit));
+    const skip = (page - 1) * limit;
+
+    const items = await Medicine.find(filter)
+      .sort({ [sortFieldRaw]: sortDirectionRaw })
+      .skip(skip)
+      .limit(limit);
+
+    res.json({ items, total, page, pages, limit, sortField: sortFieldRaw, sortDirection: sortDirectionRaw });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
