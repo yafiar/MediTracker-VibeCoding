@@ -38,12 +38,22 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await authAPI.register({
+      const response = await authAPI.register({
         name: formData.name,
         email: formData.email,
         password: formData.password,
       });
-      navigate('/login');
+      // Store token and user info if returned
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        if (response.data.user) {
+          localStorage.setItem('userId', response.data.user.id);
+          localStorage.setItem('userName', response.data.user.name);
+        }
+        navigate('/dashboard');
+      } else {
+        navigate('/login');
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {

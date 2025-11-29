@@ -33,12 +33,14 @@ const authRoutes = require('./routes/auth');
 const medicineRoutes = require('./routes/medicines');
 const scheduleRoutes = require('./routes/schedules');
 const intakeRoutes = require('./routes/intakes');
+const notificationRoutes = require('./routes/notifications');
 
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/medicines', medicineRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/intakes', intakeRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Test route
 app.get('/', (req, res) => {

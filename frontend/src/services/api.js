@@ -69,4 +69,11 @@ export const intakeAPI = {
   delete: (id) => api.delete(`/intakes/${id}`),
 };
 
+// Notification API
+export const notificationAPI = {
+  getAll: (params = {}) => api.get('/notifications', { params }),
+  create: (data) => api.post('/notifications', data),
+  clearAll: () => api.delete('/notifications/clear'),
+};
+
 export default api;

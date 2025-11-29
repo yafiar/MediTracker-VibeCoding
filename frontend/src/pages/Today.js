@@ -74,7 +74,12 @@ const Today = () => {
 
   return (
     <div className="today-page">
-      <Navbar onLogout={() => { localStorage.removeItem('token'); window.location.href='/login'; }} />
+      <Navbar onLogout={() => { 
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userName');
+        window.location.href='/login'; 
+      }} />
       <div className="today-container">
         <div className="today-header">
           <h1>Today's Medicines</h1>
