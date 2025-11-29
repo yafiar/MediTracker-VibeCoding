@@ -194,6 +194,26 @@ npm start
 
 ## 📸 Screenshots
 
+### Login Page
+
+<img width="1919" height="947" alt="image" src="https://github.com/user-attachments/assets/3489d9dd-f510-467d-8647-e2038e1376ab" />
+
+### Main Dashboard
+
+<img width="1919" height="947" alt="image" src="https://github.com/user-attachments/assets/f16c46b5-4331-4f92-90cf-088eb265429c" />
+
+### Today's Intake
+
+<img width="1919" height="949" alt="image" src="https://github.com/user-attachments/assets/8d942d88-fab0-46bc-bbb2-64f12fce728d" />
+
+### Today's Medicine
+
+<img width="1919" height="950" alt="image" src="https://github.com/user-attachments/assets/4419f3b9-e1c4-47ae-95d4-69e159e22244" />
+
+### Add Medicine
+
+<img width="1919" height="948" alt="image" src="https://github.com/user-attachments/assets/2586ed5b-0e00-4d97-8059-0eb094e554d6" />
+
 ## 👨‍💻 Author
 
 Created by Ahmad Yafi - 066 for PemWeb Class
