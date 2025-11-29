@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const uri = "mongodb+srv://YafiA:<db_password>@vibecodingpweb.ah0jbrq.mongodb.net/?appName=VibeCodingPweb";
 
 const UserSchema = new mongoose.Schema({
   name: {

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Intake = require('../models/Intake');
 const auth = require('../middleware/auth');
+const { runManualCleanup } = require('../services/dailyCleanup');
 
 // Get today's intakes
 router.get('/today', auth, async (req, res) => {
@@ -72,6 +73,20 @@ router.get('/history', auth, async (req, res) => {
     res.json(intakes);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Manual cleanup endpoint (admin/testing)
+router.post('/cleanup', auth, async (req, res) => {
+  try {
+    const result = await runManualCleanup();
+    if (result.success) {
+      res.json(result);
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Cleanup failed', error: error.message });
   }
 });
 

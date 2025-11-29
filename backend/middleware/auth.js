@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const uri = "mongodb+srv://YafiA:<db_password>@vibecodingpweb.ah0jbrq.mongodb.net/?appName=VibeCodingPweb";
 
 const auth = async (req, res, next) => {
   try {

@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const { startDailyCleanup } = require('./services/dailyCleanup');
 
 const app = express();
 
@@ -16,7 +17,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ MongoDB Connected Successfully'))
+  .then(() => {
+    console.log('✅ MongoDB Connected Successfully');
+    // Start daily cleanup scheduler after DB connection
+    startDailyCleanup();
+  })
   .catch((err) => console.log('❌ MongoDB Connection Error:', err));
 
 // Import routes
