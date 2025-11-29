@@ -4,7 +4,7 @@ import { useNotifications } from '../context/NotificationContext';
 import './NotificationHistory.css';
 
 const NotificationHistory = () => {
-  const { history, clearHistory, loading } = useNotifications();
+  const { history, clearHistory } = useNotifications();
   return (
     <div className="notif-history-page">
       <Navbar onLogout={() => { 
@@ -20,21 +20,16 @@ const NotificationHistory = () => {
             <button className="clear-history-btn" onClick={clearHistory}>Clear History</button>
           )}
         </div>
-        {loading ? (
-          <div className="empty-state">
-            <div className="empty-icon">⏳</div>
-            <h3>Loading notifications...</h3>
-          </div>
-        ) : history.length === 0 ? (
+        {history.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">🔕</div>
             <h3>No notifications yet</h3>
-            <p>Reminders you receive will appear here and persist for 7 days.</p>
+            <p>Reminders you receive will appear here.</p>
           </div>
         ) : (
           <div className="notif-history-list">
             {history.map(n => (
-              <div key={n._id || n.id} className="history-item">
+              <div key={n.id} className="history-item">
                 <div className="history-main">
                   <h4>{n.title}</h4>
                   <p>{n.body}</p>
@@ -44,7 +39,7 @@ const NotificationHistory = () => {
                 </div>
                 <div className="history-meta">
                   {n.scheduledTime && <span className="scheduled">Scheduled: {n.scheduledTime}</span>}
-                  <span className="timestamp">{new Date(n.createdAt).toLocaleString()}</span>
+                  <span className="timestamp">{new Date(n.createdAt).toLocaleTimeString()}</span>
                 </div>
               </div>
             ))}

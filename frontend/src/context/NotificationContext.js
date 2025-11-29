@@ -1,56 +1,61 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { notificationAPI } from '../services/api';
 
 const NotificationContext = createContext({
   active: [],
   history: [],
   addNotification: () => {},
   dismissNotification: () => {},
-  clearHistory: () => {},
-  loadHistory: () => {}
+  clearHistory: () => {}
 });
 
 export const NotificationProvider = ({ children }) => {
   const [active, setActive] = useState([]);
-  const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  // Load notification history from backend when user is authenticated
-  const loadHistory = useCallback(async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setHistory([]);
-      return;
-    }
-
+  const [currentUserId, setCurrentUserId] = useState(() => localStorage.getItem('userId'));
+  const [history, setHistory] = useState(() => {
     try {
-      setLoading(true);
-      const response = await notificationAPI.getAll({ limit: 200 });
-      setHistory(response.data || []);
-    } catch (error) {
-      console.error('Failed to load notification history:', error);
-      // If unauthorized, clear history
-      if (error.response?.status === 401) {
-        setHistory([]);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      const userId = localStorage.getItem('userId');
+      if (!userId) return [];
+      const raw = localStorage.getItem(`notification_history_${userId}`);
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  });
 
-  // Load history on mount and when token changes
+  // Watch for userId changes (e.g., different user logs in)
   useEffect(() => {
-    loadHistory();
-    
-    // Poll for new notifications every 30 seconds when authenticated
-    const token = localStorage.getItem('token');
-    if (!token) return;
-    
-    const interval = setInterval(loadHistory, 30000);
-    return () => clearInterval(interval);
-  }, [loadHistory]);
+    const checkUserId = () => {
+      const userId = localStorage.getItem('userId');
+      if (userId !== currentUserId) {
+        setCurrentUserId(userId);
+        // Load new user's history
+        try {
+          if (!userId) {
+            setHistory([]);
+            setActive([]);
+          } else {
+            const raw = localStorage.getItem(`notification_history_${userId}`);
+            setHistory(raw ? JSON.parse(raw) : []);
+            setActive([]);
+          }
+        } catch {
+          setHistory([]);
+          setActive([]);
+        }
+      }
+    };
 
-  const addNotification = useCallback(async (notif) => {
+    // Check periodically for userId changes
+    const interval = setInterval(checkUserId, 1000);
+    return () => clearInterval(interval);
+  }, [currentUserId]);
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      localStorage.setItem(`notification_history_${userId}`, JSON.stringify(history));
+    }
+  }, [history]);
+
+  const addNotification = useCallback((notif) => {
     const item = {
       id: notif.id || (Date.now() + Math.random()),
       title: notif.title || 'Reminder',
@@ -61,54 +66,20 @@ export const NotificationProvider = ({ children }) => {
       scheduledTime: notif.scheduledTime || null,
       createdAt: new Date().toISOString()
     };
-    
-    // Add to active notifications (in-memory)
-    setActive(prev => [item, ...prev.slice(0, 9)]);
-    
-    // Save to backend database
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const response = await notificationAPI.create({
-          title: item.title,
-          body: item.body,
-          medicine: item.medicine,
-          scheduleId: item.scheduleId,
-          scheduledTime: item.scheduledTime
-        });
-        // Update local history with the saved notification (has proper _id from DB)
-        setHistory(prev => [response.data, ...prev].slice(0, 200));
-      } catch (error) {
-        console.error('Failed to save notification to database:', error);
-        // Still add to local history even if save fails
-        setHistory(prev => [item, ...prev].slice(0, 200));
-      }
-    } else {
-      // If not authenticated, just add to local history
-      setHistory(prev => [item, ...prev].slice(0, 200));
-    }
+    setActive(prev => [item, ...prev.slice(0,9)]);
+    setHistory(prev => [item, ...prev].slice(0,200));
   }, []);
 
   const dismissNotification = useCallback((id) => {
     setActive(prev => prev.filter(n => n.id !== id));
   }, []);
 
-  const clearHistory = useCallback(async () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        await notificationAPI.clearAll();
-        setHistory([]);
-      } catch (error) {
-        console.error('Failed to clear notification history:', error);
-      }
-    } else {
-      setHistory([]);
-    }
+  const clearHistory = useCallback(() => {
+    setHistory([]);
   }, []);
 
   return (
-    <NotificationContext.Provider value={{ active, history, addNotification, dismissNotification, clearHistory, loadHistory, loading }}>
+    <NotificationContext.Provider value={{ active, history, addNotification, dismissNotification, clearHistory }}>
       {children}
     </NotificationContext.Provider>
   );
