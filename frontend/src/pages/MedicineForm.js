@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { medicineAPI } from '../services/api';
+import { getImageUrl } from '../utils/imageHelper';
 import './MedicineForm.css';
 
 const MedicineForm = () => {
@@ -37,8 +38,7 @@ const MedicineForm = () => {
         frequency: medicine.frequency || '',
       });
       if (medicine.image) {
-        const path = medicine.image.startsWith('/') ? medicine.image : '/' + medicine.image;
-        setImagePreview(`http://localhost:5000${path}`);
+        setImagePreview(getImageUrl(medicine.image));
       }
     } catch (error) {
       console.error('Error fetching medicine:', error);

@@ -5,6 +5,7 @@ import { medicineAPI, intakeAPI } from '../services/api';
 import Navbar from '../components/Navbar';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useToast } from '../context/ToastContext';
+import { getImageUrl } from '../utils/imageHelper';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -189,7 +190,7 @@ const Dashboard = () => {
                   <div className="medicine-image">
                     {medicine.image ? (
                       <img
-                        src={`http://localhost:5000${medicine.image.startsWith('/') ? medicine.image : '/' + medicine.image}`}
+                        src={getImageUrl(medicine.image)}
                         alt={medicine.name}
                       />
                     ) : (
