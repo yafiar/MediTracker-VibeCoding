@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -7,6 +7,7 @@ import MedicineForm from './pages/MedicineForm';
 import ScheduleManagement from './pages/ScheduleManagement';
 import Today from './pages/Today';
 import PrivateRoute from './components/PrivateRoute';
+import RootRedirect from './components/RootRedirect';
 import './App.css';
 import { ToastProvider } from './context/ToastContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -71,7 +72,7 @@ function App() {
             </PrivateRoute>
           }
         />
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<RootRedirect />} />
         </Routes>
         <NotificationManager />
         <NotificationTray />
