@@ -61,7 +61,9 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
     };
 
     if (req.file) {
-      medicineData.image = `/uploads/${req.file.filename}`;
+      // File is now in uploads/userId/filename
+      const userId = req.user._id.toString();
+      medicineData.image = `/uploads/${userId}/${req.file.filename}`;
     }
 
     const medicine = new Medicine(medicineData);
@@ -105,7 +107,9 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
           try { fs.unlinkSync(oldPath); } catch (_) {}
         }
       }
-      updates.image = `/uploads/${req.file.filename}`;
+      // File is now in uploads/userId/filename
+      const userId = req.user._id.toString();
+      updates.image = `/uploads/${userId}/${req.file.filename}`;
     }
 
     const medicine = await Medicine.findOneAndUpdate(

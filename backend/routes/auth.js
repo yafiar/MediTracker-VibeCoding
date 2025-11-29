@@ -86,7 +86,9 @@ router.put('/profile', auth, upload.single('avatar'), async (req, res) => {
     const updates = { name: req.body.name };
     
     if (req.file) {
-      updates.avatar = `/uploads/${req.file.filename}`;
+      // File is now in uploads/userId/filename
+      const userId = req.user._id.toString();
+      updates.avatar = `/uploads/${userId}/${req.file.filename}`;
     }
 
     const user = await User.findByIdAndUpdate(
