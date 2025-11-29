@@ -1,0 +1,13 @@
+{
+  "short_name": "MediTracker",
+  "name": "MediTracker Medicine & Schedule Tracker",
+  "icons": [
+    { "src": "logo-64.png", "sizes": "64x64", "type": "image/png" },
+    { "src": "logo-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "logo-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
