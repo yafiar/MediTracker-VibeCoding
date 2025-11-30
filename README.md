@@ -4,7 +4,7 @@
 
 A web application for tracking your medicine intake with schedules and reminders.
 
-https://meditrackers.vercel.app/
+https://meditrackers.vercel.app/login
 
 </div>
 
