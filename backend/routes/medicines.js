@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
 const Medicine = require('../models/Medicine');
 const auth = require('../middleware/auth');
-const upload = require('../middleware/upload');
+const { upload, uploadToImageKit } = require('../middleware/upload');
 
 // Get medicines (with pagination, search, sorting)
 router.get('/', auth, async (req, res) => {
@@ -61,9 +59,12 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
     };
 
     if (req.file) {
-      // File is now in uploads/userId/filename
-      const userId = req.user._id.toString();
-      medicineData.image = `/uploads/${userId}/${req.file.filename}`;
+      try {
+        const uploaded = await uploadToImageKit(req, req.file);
+        medicineData.image = uploaded.url; // Store ImageKit URL
+      } catch (e) {
+        return res.status(500).json({ message: 'Image upload failed', error: e.message });
+      }
     }
 
     const medicine = new Medicine(medicineData);
@@ -93,23 +94,16 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
     const removeImageFlag = req.body.removeImage === 'true' || req.body.removeImage === true;
 
     if (removeImageFlag && existing.image) {
-      const oldPath = path.join(__dirname, '..', existing.image.replace(/^\//, ''));
-      if (fs.existsSync(oldPath)) {
-        try { fs.unlinkSync(oldPath); } catch (_) {}
-      }
-      updates.image = null;
+      updates.image = null; // Remove image reference
     }
 
     if (req.file) {
-      if (existing.image) {
-        const oldPath = path.join(__dirname, '..', existing.image.replace(/^\//, ''));
-        if (fs.existsSync(oldPath)) {
-          try { fs.unlinkSync(oldPath); } catch (_) {}
-        }
+      try {
+        const uploaded = await uploadToImageKit(req, req.file);
+        updates.image = uploaded.url; // Store new ImageKit URL
+      } catch (e) {
+        return res.status(500).json({ message: 'Image upload failed', error: e.message });
       }
-      // File is now in uploads/userId/filename
-      const userId = req.user._id.toString();
-      updates.image = `/uploads/${userId}/${req.file.filename}`;
     }
 
     const medicine = await Medicine.findOneAndUpdate(
@@ -136,12 +130,7 @@ router.delete('/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Medicine not found' });
     }
 
-    if (medicine.image) {
-      const imgPath = path.join(__dirname, '..', medicine.image.replace(/^\//, ''));
-      if (fs.existsSync(imgPath)) {
-        try { fs.unlinkSync(imgPath); } catch (_) {}
-      }
-    }
+    // Optional: Delete image from ImageKit using fileId if stored
 
     res.json({ message: 'Medicine deleted successfully' });
   } catch (error) {
