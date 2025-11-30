@@ -8,6 +8,25 @@ https://meditrackers.vercel.app/
 
 </div>
 
+## 🎯 Problem Statement
+
+Managing daily medication can be challenging, especially for individuals taking multiple medicines with different schedules. Common problems include:
+
+- **Forgetting medication times** - People often miss their scheduled doses due to busy routines
+- **Disorganized medicine information** - Important details like dosage, frequency, and instructions get lost
+- **No centralized tracking** - Difficult to maintain a comprehensive record of all medicines and intake history
+- **Lack of reminders** - No automated system to prompt users when it's time to take their medicine
+- **Poor adherence monitoring** - Hard to track whether medication schedules are being followed consistently
+
+**MediTracker** solves these problems by providing a centralized, user-friendly platform where users can:
+- Store all medicine information with images and details
+- Set customized schedules for each medicine
+- Receive notifications for upcoming doses
+- Track intake history and adherence
+- Access their medication data from anywhere with cloud storage
+
+This ensures better medication management, improved health outcomes, and peace of mind for users managing their daily medicine intake.
+
 ## ✨ Features
 
 ### 🔐 Authentication
