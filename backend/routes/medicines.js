@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Medicine = require('../models/Medicine');
+const Schedule = require('../models/Schedule');
+const Intake = require('../models/Intake');
 const auth = require('../middleware/auth');
 const { upload, uploadToImageKit } = require('../middleware/upload');
 
@@ -129,6 +131,10 @@ router.delete('/:id', auth, async (req, res) => {
     if (!medicine) {
       return res.status(404).json({ message: 'Medicine not found' });
     }
+
+    // Cascade delete related schedules and intakes for this medicine
+    await Schedule.deleteMany({ userId: req.user._id, medicineId: medicine._id });
+    await Intake.deleteMany({ userId: req.user._id, medicineId: medicine._id });
 
     // Optional: Delete image from ImageKit using fileId if stored
 
